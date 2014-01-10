@@ -20,14 +20,14 @@ import com.android.volley.Request.Method;
 import com.android.volley.mock.TestRequest;
 import com.android.volley.toolbox.HttpClientStack.HttpPatch;
 
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpHead;
-import org.apache.http.client.methods.HttpOptions;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpTrace;
-import org.apache.http.client.methods.HttpUriRequest;
+import ch.boye.httpclientandroidlib.client.methods.HttpDelete;
+import ch.boye.httpclientandroidlib.client.methods.HttpGet;
+import ch.boye.httpclientandroidlib.client.methods.HttpHead;
+import ch.boye.httpclientandroidlib.client.methods.HttpOptions;
+import ch.boye.httpclientandroidlib.client.methods.HttpPost;
+import ch.boye.httpclientandroidlib.client.methods.HttpPut;
+import ch.boye.httpclientandroidlib.client.methods.HttpTrace;
+import ch.boye.httpclientandroidlib.client.methods.HttpUriRequest;
 
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;

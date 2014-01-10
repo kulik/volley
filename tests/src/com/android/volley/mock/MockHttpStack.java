@@ -20,7 +20,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.toolbox.HttpStack;
 
-import org.apache.http.HttpResponse;
+import ch.boye.httpclientandroidlib.HttpResponse;
 
 import java.util.HashMap;
 import java.util.Map;

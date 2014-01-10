@@ -1,5 +1,13 @@
 apply plugin: 'android-library'
 
+repositories {
+    flatDir {
+        name 'localRepository1'
+        dirs 'libs'
+    }
+}
+
+
 android {
     compileSdkVersion 17
     buildToolsVersion = 17
@@ -27,4 +35,13 @@ android {
             java.srcDirs      = ["tests/src"]
         }
     }
+dependencies {
+    compile ':httpclientandroidlib-1.1.2:'
+//    compile files('libs/jcifs-1.3.17.jar')
 }
+}
+
+
+
+
+

@@ -21,9 +21,9 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.mock.MockHttpStack;
 
-import org.apache.http.ProtocolVersion;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.message.BasicHttpResponse;
+import ch.boye.httpclientandroidlib.ProtocolVersion;
+import ch.boye.httpclientandroidlib.entity.StringEntity;
+import ch.boye.httpclientandroidlib.message.BasicHttpResponse;
 
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
