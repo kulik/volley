@@ -5,7 +5,7 @@ android {
     buildToolsVersion '19.1.0'
     sourceSets {
         defaultConfig {
-            testPackageName 'com.android.volley.tests'
+            testApplicationId 'com.android.volley.tests'
         }
 
         main {
