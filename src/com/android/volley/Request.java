@@ -30,6 +30,9 @@ import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.Map;
 
+import ch.boye.httpclientandroidlib.HttpEntity;
+import ch.boye.httpclientandroidlib.entity.ByteArrayEntity;
+
 /**
  * Base class for all network requests.
  *
@@ -423,6 +426,15 @@ public abstract class Request<T> implements Comparable<Request<T>> {
         if (params != null && params.size() > 0) {
             return encodeParameters(params, getParamsEncoding());
         }
+        return null;
+    }
+
+    public HttpEntity getEntity() throws AuthFailureError {
+        byte[] body = getBody();
+        if (body != null) {
+            return new ByteArrayEntity(body);
+        }
+
         return null;
     }
 

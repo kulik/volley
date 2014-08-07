@@ -19,13 +19,13 @@ package com.android.volley.toolbox;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.net.http.AndroidHttpClient;
-import android.os.Build;
 
 import com.android.volley.Network;
 import com.android.volley.RequestQueue;
 
 import java.io.File;
+
+import ch.boye.httpclientandroidlib.impl.client.HttpClients;
 
 public class Volley {
 
@@ -51,14 +51,19 @@ public class Volley {
             userAgent = packageName + "/" + info.versionCode;
         } catch (NameNotFoundException e) {
         }
-//TODO implement it if needed
+        //TODO implement it if needed
         if (stack == null) {
+            // TODO We move to HttpClient 4.3.1
+            // TODO That is why use custom stack.
+            stack = new CustomStack(HttpClients.createDefault());
+
 //            if (Build.VERSION.SDK_INT >= 9) {
-                stack = new HurlStack();
+//                stack = new HurlStack();
 //            } else {
-                // Prior to Gingerbread, HttpUrlConnection was unreliable.
-                // See: http://android-developers.blogspot.com/2011/09/androids-http-clients.html
-//                stack = new HttpClientStack(AndroidHttpClient.newInsta2nce(userAgent));
+////                Prior to Gingerbread, HttpUrlConnection was unreliable.
+////                See: http://android-developers.blogspot.com/2011/09/androids-http-clients.html
+////                stack = new HttpClientStack(AndroidHttpClient.newInstance(userAgent));
+//               stack = new HttpClientStack(HttpClients.createDefault());
 //            }
         }
 
