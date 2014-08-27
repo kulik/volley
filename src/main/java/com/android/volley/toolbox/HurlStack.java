@@ -20,6 +20,16 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Request.Method;
 
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.ProtocolVersion;
+import org.apache.http.StatusLine;
+import org.apache.http.entity.BasicHttpEntity;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicHttpResponse;
+import org.apache.http.message.BasicStatusLine;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,15 +43,15 @@ import java.util.Map.Entry;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
 
-import ch.boye.httpclientandroidlib.Header;
-import ch.boye.httpclientandroidlib.HttpEntity;
-import ch.boye.httpclientandroidlib.HttpResponse;
-import ch.boye.httpclientandroidlib.ProtocolVersion;
-import ch.boye.httpclientandroidlib.StatusLine;
-import ch.boye.httpclientandroidlib.entity.BasicHttpEntity;
-import ch.boye.httpclientandroidlib.message.BasicHeader;
-import ch.boye.httpclientandroidlib.message.BasicHttpResponse;
-import ch.boye.httpclientandroidlib.message.BasicStatusLine;
+//import ch.boye.httpclientandroidlib.Header;
+//import ch.boye.httpclientandroidlib.HttpEntity;
+//import ch.boye.httpclientandroidlib.HttpResponse;
+//import ch.boye.httpclientandroidlib.ProtocolVersion;
+//import ch.boye.httpclientandroidlib.StatusLine;
+//import ch.boye.httpclientandroidlib.entity.BasicHttpEntity;
+//import ch.boye.httpclientandroidlib.message.BasicHeader;
+//import ch.boye.httpclientandroidlib.message.BasicHttpResponse;
+//import ch.boye.httpclientandroidlib.message.BasicStatusLine;
 
 /**
  * An {@link HttpStack} based on {@link HttpURLConnection}.

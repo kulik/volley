@@ -25,13 +25,16 @@ import android.text.TextUtils;
 
 import com.android.volley.VolleyLog.MarkerLog;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.entity.ByteArrayEntity;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.Map;
 
-import ch.boye.httpclientandroidlib.HttpEntity;
-import ch.boye.httpclientandroidlib.entity.ByteArrayEntity;
+//import ch.boye.httpclientandroidlib.HttpEntity;
+//import ch.boye.httpclientandroidlib.entity.ByteArrayEntity;
 
 /**
  * Base class for all network requests.
@@ -90,11 +93,6 @@ public abstract class Request<T> implements Comparable<Request<T>> {
      * Sequence number of this request, used to enforce FIFO ordering.
      */
     private Integer mSequence;
-
-    /**
-     * The request queue this request is associated with.
-     */
-    private RequestQueue mRequestQueue;
 
     /**
      * Whether or not responses to this request should be cached.
@@ -171,23 +169,6 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     }
 
     /**
-     * Set a tag on this request. Can be used to cancel all requests with this
-     * tag by {@link RequestQueue#cancelAll(Object)}.
-     */
-    public void setTag(Object tag) {
-        mTag = tag;
-    }
-
-    /**
-     * Returns this request's tag.
-     *
-     * @see Request#setTag(Object)
-     */
-    public Object getTag() {
-        return mTag;
-    }
-
-    /**
      * @return A tag for use with {@link TrafficStats#setThreadStatsTag(int)}
      */
     public int getTrafficStatsTag() {
@@ -218,9 +199,6 @@ public abstract class Request<T> implements Comparable<Request<T>> {
      * <p>Also dumps all events from this request's event log; for debugging.</p>
      */
     void finish(final String tag) {
-        if (mRequestQueue != null) {
-            mRequestQueue.finish(this);
-        }
         if (MarkerLog.ENABLED) {
             final long threadId = Thread.currentThread().getId();
             if (Looper.myLooper() != Looper.getMainLooper()) {
@@ -245,21 +223,6 @@ public abstract class Request<T> implements Comparable<Request<T>> {
                 VolleyLog.d("%d ms: %s", requestTime, this.toString());
             }
         }
-    }
-
-    /**
-     * Associates this request with the given queue. The request queue will be notified when this
-     * request has finished.
-     */
-    public void setRequestQueue(RequestQueue requestQueue) {
-        mRequestQueue = requestQueue;
-    }
-
-    /**
-     * Sets the sequence number of this request.  Used by {@link RequestQueue}.
-     */
-    public final void setSequence(int sequence) {
-        mSequence = sequence;
     }
 
     /**

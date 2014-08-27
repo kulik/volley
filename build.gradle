@@ -8,31 +8,17 @@ android {
             testApplicationId 'com.android.volley.tests'
         }
 
-        main {
-            assets.srcDirs = ['assets']
-            res.srcDirs = ['res']
-            aidl.srcDirs = ['src']
-            resources.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
-            java.srcDirs = ['src']
-            manifest.srcFile 'AndroidManifest.xml'
-
-        }
-
-        androidTest {
-            assets.srcDirs = ["tests/assets"]
-            res.srcDirs = ["tests/res"]
-            resources.srcDirs = ["tests/src"]
-            java.srcDirs = ["tests/src"]
-        }
     }
     defaultConfig {}
     productFlavors {
+
     }
 }
 
 dependencies {
-    compile fileTree(include: '*.jar', dir: 'libs')
+//    compile fileTree(include: '*.jar', dir: 'libs')
+//    goodCompile project(':relatedProjects:gd')
+//    compile 'com.github.kulik:android-jaxb:0.3@aar'
 }
 
 

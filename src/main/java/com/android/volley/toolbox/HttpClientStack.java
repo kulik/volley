@@ -1,7 +1,42 @@
+/*
+ * Copyright (C) 2011 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.android.volley.toolbox;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
+import com.android.volley.Request.Method;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpHead;
+import org.apache.http.client.methods.HttpOptions;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpTrace;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 
 import java.io.IOException;
 import java.net.URI;
@@ -9,37 +44,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import ch.boye.httpclientandroidlib.HttpEntity;
-import ch.boye.httpclientandroidlib.HttpResponse;
-import ch.boye.httpclientandroidlib.NameValuePair;
-import ch.boye.httpclientandroidlib.client.HttpClient;
-import ch.boye.httpclientandroidlib.client.methods.HttpDelete;
-import ch.boye.httpclientandroidlib.client.methods.HttpEntityEnclosingRequestBase;
-import ch.boye.httpclientandroidlib.client.methods.HttpGet;
-import ch.boye.httpclientandroidlib.client.methods.HttpHead;
-import ch.boye.httpclientandroidlib.client.methods.HttpOptions;
-import ch.boye.httpclientandroidlib.client.methods.HttpPost;
-import ch.boye.httpclientandroidlib.client.methods.HttpPut;
-import ch.boye.httpclientandroidlib.client.methods.HttpTrace;
-import ch.boye.httpclientandroidlib.client.methods.HttpUriRequest;
-import ch.boye.httpclientandroidlib.entity.ByteArrayEntity;
-import ch.boye.httpclientandroidlib.message.BasicNameValuePair;
-import ch.boye.httpclientandroidlib.params.CoreProtocolPNames;
-import ch.boye.httpclientandroidlib.params.HttpConnectionParams;
-import ch.boye.httpclientandroidlib.params.HttpParams;
+//import ch.boye.httpclientandroidlib.HttpEntity;
+//import ch.boye.httpclientandroidlib.HttpResponse;
+//import ch.boye.httpclientandroidlib.NameValuePair;
+//import ch.boye.httpclientandroidlib.client.HttpClient;
+//import ch.boye.httpclientandroidlib.client.methods.HttpDelete;
+//import ch.boye.httpclientandroidlib.client.methods.HttpEntityEnclosingRequestBase;
+//import ch.boye.httpclientandroidlib.client.methods.HttpGet;
+//import ch.boye.httpclientandroidlib.client.methods.HttpHead;
+//import ch.boye.httpclientandroidlib.client.methods.HttpOptions;
+//import ch.boye.httpclientandroidlib.client.methods.HttpPost;
+//import ch.boye.httpclientandroidlib.client.methods.HttpPut;
+//import ch.boye.httpclientandroidlib.client.methods.HttpTrace;
+//import ch.boye.httpclientandroidlib.client.methods.HttpUriRequest;
+//import ch.boye.httpclientandroidlib.entity.ByteArrayEntity;
+//import ch.boye.httpclientandroidlib.message.BasicNameValuePair;
+//import ch.boye.httpclientandroidlib.params.HttpConnectionParams;
+//import ch.boye.httpclientandroidlib.params.HttpParams;
 
 /**
-* Created by kulik on 1/5/14.
-*/
-public class CustomStack implements HttpStack {
-
-    protected static final String HEADER_CONTENT_TYPE = "Content-Type";
-
+ * An HttpStack that performs request over an {@link HttpClient}.
+ */
+public class HttpClientStack implements HttpStack {
     protected final HttpClient mClient;
 
-//    private final static String HEADER_CONTENT_TYPE = "Content-Type";
+    private final static String HEADER_CONTENT_TYPE = "Content-Type";
 
-    public CustomStack(HttpClient client) {
+    public HttpClientStack(HttpClient client) {
         mClient = client;
     }
 
@@ -62,7 +93,6 @@ public class CustomStack implements HttpStack {
     public HttpResponse performRequest(Request<?> request, Map<String, String> additionalHeaders)
             throws IOException, AuthFailureError {
         HttpUriRequest httpRequest = createHttpRequest(request, additionalHeaders);
-        httpRequest.getParams().setBooleanParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, false);
         addHeaders(httpRequest, additionalHeaders);
         addHeaders(httpRequest, request.getHeaders());
         onPrepareRequest(httpRequest);
@@ -82,7 +112,7 @@ public class CustomStack implements HttpStack {
     /* protected */ static HttpUriRequest createHttpRequest(Request<?> request,
                                                             Map<String, String> additionalHeaders) throws AuthFailureError {
         switch (request.getMethod()) {
-            case Request.Method.DEPRECATED_GET_OR_POST: {
+            case Method.DEPRECATED_GET_OR_POST: {
                 // This is the deprecated way that needs to be handled for backwards compatibility.
                 // If the request's post body is null, then the assumption is that the request is
                 // GET.  Otherwise, it is assumed that the request is a POST.
@@ -98,29 +128,29 @@ public class CustomStack implements HttpStack {
                     return new HttpGet(request.getUrl());
                 }
             }
-            case Request.Method.GET:
+            case Method.GET:
                 return new HttpGet(request.getUrl());
-            case Request.Method.DELETE:
+            case Method.DELETE:
                 return new HttpDelete(request.getUrl());
-            case Request.Method.POST: {
+            case Method.POST: {
                 HttpPost postRequest = new HttpPost(request.getUrl());
                 postRequest.addHeader(HEADER_CONTENT_TYPE, request.getBodyContentType());
                 setEntityIfNonEmptyBody(postRequest, request);
                 return postRequest;
             }
-            case Request.Method.PUT: {
+            case Method.PUT: {
                 HttpPut putRequest = new HttpPut(request.getUrl());
                 putRequest.addHeader(HEADER_CONTENT_TYPE, request.getBodyContentType());
                 setEntityIfNonEmptyBody(putRequest, request);
                 return putRequest;
             }
-            case Request.Method.HEAD:
+            case Method.HEAD:
                 return new HttpHead(request.getUrl());
-            case Request.Method.OPTIONS:
+            case Method.OPTIONS:
                 return new HttpOptions(request.getUrl());
-            case Request.Method.TRACE:
+            case Method.TRACE:
                 return new HttpTrace(request.getUrl());
-            case Request.Method.PATCH: {
+            case Method.PATCH: {
                 HttpPatch patchRequest = new HttpPatch(request.getUrl());
                 patchRequest.addHeader(HEADER_CONTENT_TYPE, request.getBodyContentType());
                 setEntityIfNonEmptyBody(patchRequest, request);
@@ -133,15 +163,16 @@ public class CustomStack implements HttpStack {
 
     private static void setEntityIfNonEmptyBody(HttpEntityEnclosingRequestBase httpRequest,
                                                 Request<?> request) throws AuthFailureError {
-        HttpEntity entity = request.getEntity();
-        if(entity != null){
+        byte[] body = request.getBody();
+        if (body != null) {
+            HttpEntity entity = new ByteArrayEntity(body);
             httpRequest.setEntity(entity);
         }
     }
 
     /**
      * Called before the request is executed using the underlying HttpClient.
-     *
+     * <p/>
      * <p>Overwrite in subclasses to augment the request.</p>
      */
     protected void onPrepareRequest(HttpUriRequest request) throws IOException {
