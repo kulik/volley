@@ -126,6 +126,8 @@ public class BasicNetwork implements Network {
                     throw new IOException();
                 }
                 return new NetworkResponse(statusCode, responseContents, responseHeaders, false);
+            } catch (InterruptedException e) {
+                attemptRetryOnException("retrieve connection", request, new TimeoutError());
             } catch (SocketTimeoutException e) {
                 attemptRetryOnException("socket", request, new TimeoutError());
             } catch (ConnectTimeoutException e) {
