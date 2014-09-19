@@ -1,6 +1,9 @@
 apply plugin: 'android-library'
 
 android {
+    lintOptions {
+      abortOnError false
+    }
     compileSdkVersion 17
     buildToolsVersion '20.0.0'
     sourceSets {
